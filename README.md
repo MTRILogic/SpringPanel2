@@ -1,5 +1,4 @@
-# SpringPanel
-
+# SpringPanel (V2)
 [![](https://jitpack.io/v/MTRILogic/SpringPanel2.svg)](https://jitpack.io/#MTRILogic/SpringPanel2)
 
 A fluent API wrapper for Java Swing's SpringLayout that simplifies complex UI layouts with intuitive method chaining.
@@ -20,10 +19,14 @@ Add JitPack to your `build.gradle`:
 
 ```gradle
 repositories {
+    maven { url = uri("https://jitpack.io") }
+    o
     maven { url 'https://jitpack.io' }
 }
 
 dependencies {
+    implementation("com.github.MTRILogic:SpringPanel2:Tag")
+    o
     implementation 'com.github.MTRILogic:SpringPanel2:Tag'
 }
 ```
