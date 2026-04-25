@@ -2,7 +2,7 @@ package com.mtrilogic.desktop.abstracts;
 
 import javax.swing.*;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class SpringPanel extends JPanel {
 
     public SpringPanel() {
