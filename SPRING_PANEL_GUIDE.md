@@ -28,48 +28,50 @@ Guía oficial de uso para SpringPanel (v1 y v2).
     SpringPanel panel = new SpringPanel();
 
     panel.with(label)
-        .north(10)
-        .west(10);
+        .top(10)
+        .left(10);
 
     panel.with(field)
-        .baseline(label, 0)
-        .west(label, 10);
+        .baseline(label)
+        .rightOf(label, 10);
 
 ---
 
 ## Posicionamiento
 ### Relativo al contenedor:
-    .north(10)
-    .west(10)
-    .east(10)
-    .south(10)
+    .top(10)
+    .left(10)
+    .right(10)
+    .bottom(10)
 
 ### Relativo a otro componente:
-    .west(label, 10)
-    .north(label, 5)
+    .below(label, 10)
+    .above(label, 5)
+    .rightOf(label, 10)
+    .leftOf(label, 5)
 
 ---
 
 ## Alineación de texto
 ### Incorrecto:
-    panel.with(field).north(10);
+    panel.with(field).top(10);
 Esto alinea bordes, no texto.
 ### Correcto:
     panel.with(field)
-        .baseline(label, 0)
-        .west(label, 10);
+        .baseline(label)
+        .rightOf(label, 10);
 Esto alinea el contenido visual.
 
 ---
 
 ## Formularios (patrón estándar)
     panel.with(label)
-        .north(10)
-        .west(10);
+        .top(10)
+        .left(10);
 
     panel.with(field)
-        .baseline(label, 0)
-        .west(label, 10);
+        .baseline(label)
+        .rightOf(label, 10);
 
 ---
 
@@ -77,8 +79,8 @@ Esto alinea el contenido visual.
     .width(200)
     .height(40)
 
-    .width(100, 2f)
-    .height(20, 1.5f)
+    .width(2f)
+    .height(1.5f)
 
 ---
 
@@ -86,13 +88,19 @@ Esto alinea el contenido visual.
     .x(100)
     .y(50)
 
+## Rellenar espacio
+    .fill(10)
+    .fillHorizontally(10)
+    .fillVertically(10)
+
 ---
 
 ## Reglas importantes
 - Padding debe ser >= 0
 - No mezclar layouts
-- Usar baseline para texto
+- Usar baseline para alinear texto
 - Preferir posicionamiento relativo
+- Declarar componentes antes de usarlos como referencia
 
 ---
 
@@ -111,10 +119,10 @@ Esto alinea el contenido visual.
     JTextField field = new JTextField();
 
     panel.with(label)
-        .north(10)
-        .west(10);
+        .top(10)
+        .left(10);
 
     panel.with(field)
-        .baseline(label, 0)
-        .west(label, 10)
+        .baseline(label)
+        .rightOf(label, 10)
         .width(200);

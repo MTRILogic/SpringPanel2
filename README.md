@@ -20,13 +20,21 @@ Add JitPack to your `build.gradle`:
 ```gradle
 repositories {
     maven { url = uri("https://jitpack.io") }
-    o
-    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     implementation("com.github.MTRILogic:SpringPanel2:Tag")
-    o
+}
+```
+
+Or with Groovy DSL:
+
+```gradle
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
     implementation 'com.github.MTRILogic:SpringPanel2:Tag'
 }
 ```
@@ -70,22 +78,36 @@ public class MyPanel extends SpringPanel {
 
 ## 🔧 Constraint Methods
 
-### Positioning Constraints
-- `north(padding)` - Distance from top edge
-- `south(padding)` - Distance from bottom edge
-- `east(padding)` - Distance from right edge
-- `west(padding)` - Distance from left edge
-- `horizontalCenter(offset)` - Center horizontally
-- `verticalCenter(offset)` - Center vertically
-- `baseline(component, offset)` - Align text baselines
+### Positioning Constraints (Relative to Panel)
+- `top(padding)` - Distance from top edge
+- `bottom(padding)` - Distance from bottom edge
+- `left(padding)` - Distance from left edge
+- `right(padding)` - Distance from right edge
+- `centerHorizontally(offset)` - Center horizontally
+- `centerVertically(offset)` - Center vertically
+- `center(offset)` - Center both horizontally and vertically
 - `x(offset)` - Absolute X position
 - `y(offset)` - Absolute Y position
 
+### Relative Positioning Constraints
+- `below(component, padding)` - Place below another component
+- `above(component, padding)` - Place above another component
+- `rightOf(component, padding)` - Place to the right of another component
+- `leftOf(component, padding)` - Place to the left of another component
+- `baseline(component)` - Align text baselines
+- `centerHorizontally(component, offset)` - Center horizontally relative to component
+- `centerVertically(component, offset)` - Center vertically relative to component
+
+### Fill Constraints
+- `fill(padding)` - Fill all available space
+- `fillHorizontally(padding)` - Fill horizontal space
+- `fillVertically(padding)` - Fill vertical space
+
 ### Sizing Constraints
 - `width(size)` - Fixed width
-- `width(size, factor)` - Scaled width
+- `width(factor)` - Scaled width (factor of panel width)
 - `height(size)` - Fixed height
-- `height(size, factor)` - Scaled height
+- `height(factor)` - Scaled height (factor of panel height)
 
 ### Relative Positioning
 All constraints accept an optional reference component:
@@ -97,12 +119,12 @@ public class RelativePositioningExample extends SpringPanel {
         JButton button2 = new JButton("Second");
 
         with(button1)
-            .north(10)
-            .west(10);
+            .top(10)
+            .left(10);
 
         with(button2)
-            .north(button1, 10)  // 10px below button1
-            .west(button1, 5);   // 5px right of button1
+            .below(button1, 10)   // 10px below button1
+            .rightOf(button1, 5); // 5px right of button1
     }
 }
 ```
@@ -140,8 +162,8 @@ public class SpringPanelExample extends SpringPanel {
         JButton button = new JButton("Click Me");
         
         with(button)
-            .north(10)
-            .west(10)
+            .top(10)
+            .left(10)
             .width(100)
             .height(30);
     }
@@ -157,27 +179,28 @@ public class ComplexLayout extends SpringPanel {
         // Header
         JPanel header = new JPanel();
         with(header)
-            .north(0)
-            .west(0)
-            .east(0)
+            .top(0)
+            .left(0)
+            .right(0)
             .height(60);
-            
-        // Content area
+
+        // Declare panels before positioning
         JPanel content = new JPanel();
         JPanel sidebar = new JPanel();
-        
+
+        // Content area
         with(content)
-            .north(header, 0)
-            .west(0)
-            .east(sidebar, 0)
-            .south(0);
-            
+            .below(header, 0)
+            .left(0)
+            .leftOf(sidebar, 0)
+            .bottom(0);
+
         // Sidebar
         with(sidebar)
-            .north(header, 0)
+            .below(header, 0)
             .width(200)
-            .east(0)
-            .south(0);
+            .right(0)
+            .bottom(0);
     }
 }
 ```
@@ -191,12 +214,12 @@ public class BaselineExample extends SpringPanel {
         JTextField field = new JTextField();
 
         with(label)
-            .north(10)
-            .west(10);
+            .top(10)
+            .left(10);
 
         with(field)
-            .baseline(label, 0)  // Align text baselines
-            .west(label, 10)
+            .baseline(label)      // Align text baselines
+            .rightOf(label, 10)
             .width(200);
     }
 }
@@ -206,8 +229,10 @@ public class BaselineExample extends SpringPanel {
 
 SpringPanel extends JPanel and internally manages:
 
-1. **Component Tracking**: Stores the current component being configured
-2. **Constraint Collection**: Validate and apply restrictions as they are added
+1. **SpringLayout Setup**: Automatically sets SpringLayout as the layout manager
+2. **Component Registration**: Adds components to the panel if not already added
+3. **Constraint Application**: Validates and applies constraints via a fluent builder
+4. **Null Safety**: Throws descriptive exceptions for null or invalid components
 
 ## 📋 Features
 
@@ -218,7 +243,7 @@ SpringPanel extends JPanel and internally manages:
 - ✅ Baseline alignment
 - ✅ Size scaling factors
 - ✅ Built-in validation
-- ✅ Thread-safe constraint application
+- ✅ Fill helpers for common layout patterns
 - ✅ Zero external dependencies
 
 ## 🤝 Contributing

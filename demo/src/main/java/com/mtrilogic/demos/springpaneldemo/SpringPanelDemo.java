@@ -21,9 +21,9 @@ public class SpringPanelDemo extends SpringPanel {
         JPanel header = new JPanel();
         header.setBackground(Color.RED);
         with(header)
-                .north(0)
-                .west(0)
-                .east(0)
+                .top(0)
+                .left(0)
+                .right(0)
                 .height(100);
 
         // Declare remaining panels before positioning
@@ -34,26 +34,26 @@ public class SpringPanelDemo extends SpringPanel {
         
         // Position content panel (main area)
         with(content)
-                .north(header, 0)
-                .west(0)
-                .east(sidebar, 0)
-                .south(footer, 0);
+                .below(header, 0)
+                .left(0)
+                .leftOf(sidebar, 0)
+                .above(footer, 0);
 
         // Position sidebar (right side)
         sidebar.setBackground(Color.GREEN);
         with(sidebar)
-                .north(header, 0)
+                .below(header, 0)
                 .width(150)
-                .east(0)
-                .south(footer, 0)
+                .right(0)
+                .above(footer, 0)
      ;
 
         // Position footer (bottom, full width)
         footer.setBackground(Color.BLUE);
         with(footer)
-                .south(0)
-                .west(0)
-                .east(0)
+                .bottom(0)
+                .left(0)
+                .right(0)
                 .height(50);
     }
 

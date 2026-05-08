@@ -11,14 +11,14 @@ import javax.swing.*;
  * <pre>{@code
  * SpringPanel panel = new SpringPanel();
  * panel.with(button1)
- *      .north(10)
- *      .west(10)
+ *      .top(10)
+ *      .left(10)
  *      .width(100)
  *      .height(30);
- * 
+ *
  * panel.with(button2)
- *      .north(button1, 5)
- *      .west(10)
+ *      .below(button1, 5)
+ *      .left(10)
  *      .width(100)
  *      .height(30);
  * }</pre>
@@ -62,16 +62,6 @@ public class SpringPanel extends JPanel {
         return new ConstraintsBuilder(component);
     }
 
-    /**
-     * Gets the SpringLayout constraints for the specified component.
-     * 
-     * @param component the component whose constraints to retrieve
-     * @return the SpringLayout.Constraints object for the component
-     */
-    public SpringLayout.Constraints getConstraints(JComponent component) {
-        return ((SpringLayout) getLayout()).getConstraints(component);
-    }
-
     // =========================
     // BUILDER
     // =========================
@@ -102,33 +92,8 @@ public class SpringPanel extends JPanel {
          */
         private ConstraintsBuilder(JComponent component) {
             this.component = component;
-            this.layout = (SpringLayout) getLayout();
-            this.constraints = layout.getConstraints(component);
-        }
-
-        /**
-         * Validates that the padding value is non-negative.
-         * 
-         * @param pad the padding value to validate
-         * @param edge the edge name for error messages
-         * @throws IllegalArgumentException if pad is negative
-         */
-        private void validatePad(int pad, String edge) {
-            if (pad < 0) {
-                throw new IllegalArgumentException(edge + " must be >= 0");
-            }
-        }
-
-        /**
-         * Validates that the reference component is not null.
-         * 
-         * @param other the reference component to validate
-         * @throws IllegalArgumentException if the component is null
-         */
-        private void requireNonNullComponent(JComponent other) {
-            if (other == null) {
-                throw new IllegalArgumentException("Reference component cannot be null");
-            }
+            layout = (SpringLayout) getLayout();
+            constraints = layout.getConstraints(component);
         }
 
         // =========================
@@ -142,8 +107,8 @@ public class SpringPanel extends JPanel {
          * @return this ConstraintsBuilder for method chaining
          * @throws IllegalArgumentException if pad is negative
          */
-        public ConstraintsBuilder north(int pad) {
-            validatePad(pad, "NORTH");
+        public ConstraintsBuilder top(int pad) {
+            validatePad(pad, "Top");
             layout.putConstraint(SpringLayout.NORTH, component, pad, SpringLayout.NORTH, SpringPanel.this);
             return this;
         }
@@ -156,22 +121,23 @@ public class SpringPanel extends JPanel {
          * @return this ConstraintsBuilder for method chaining
          * @throws IllegalArgumentException if pad is negative or other is null
          */
-        public ConstraintsBuilder north(JComponent other, int pad) {
+        public ConstraintsBuilder below(JComponent other, int pad) {
             requireNonNullComponent(other);
-            validatePad(pad, "NORTH");
+            validatePad(pad, "Below");
             layout.putConstraint(SpringLayout.NORTH, component, pad, SpringLayout.SOUTH, other);
             return this;
         }
 
         /**
          * Sets the south edge constraint relative to the panel's south edge.
-         * 
+         *
+         *
          * @param pad the padding distance from the panel's south edge (must be >= 0)
          * @return this ConstraintsBuilder for method chaining
          * @throws IllegalArgumentException if pad is negative
          */
-        public ConstraintsBuilder south(int pad) {
-            validatePad(pad, "SOUTH");
+        public ConstraintsBuilder bottom(int pad) {
+            validatePad(pad, "Bottom");
             layout.putConstraint(SpringLayout.SOUTH, component, -pad, SpringLayout.SOUTH, SpringPanel.this);
             return this;
         }
@@ -184,9 +150,9 @@ public class SpringPanel extends JPanel {
          * @return this ConstraintsBuilder for method chaining
          * @throws IllegalArgumentException if pad is negative or other is null
          */
-        public ConstraintsBuilder south(JComponent other, int pad) {
+        public ConstraintsBuilder above(JComponent other, int pad) {
             requireNonNullComponent(other);
-            validatePad(pad, "SOUTH");
+            validatePad(pad, "Above");
             layout.putConstraint(SpringLayout.SOUTH, component, -pad, SpringLayout.NORTH, other);
             return this;
         }
@@ -198,8 +164,8 @@ public class SpringPanel extends JPanel {
          * @return this ConstraintsBuilder for method chaining
          * @throws IllegalArgumentException if pad is negative
          */
-        public ConstraintsBuilder west(int pad) {
-            validatePad(pad, "WEST");
+        public ConstraintsBuilder left(int pad) {
+            validatePad(pad, "Left");
             layout.putConstraint(SpringLayout.WEST, component, pad, SpringLayout.WEST, SpringPanel.this);
             return this;
         }
@@ -212,9 +178,9 @@ public class SpringPanel extends JPanel {
          * @return this ConstraintsBuilder for method chaining
          * @throws IllegalArgumentException if pad is negative or other is null
          */
-        public ConstraintsBuilder west(JComponent other, int pad) {
+        public ConstraintsBuilder rightOf(JComponent other, int pad) {
             requireNonNullComponent(other);
-            validatePad(pad, "WEST");
+            validatePad(pad, "Right of");
             layout.putConstraint(SpringLayout.WEST, component, pad, SpringLayout.EAST, other);
             return this;
         }
@@ -226,8 +192,8 @@ public class SpringPanel extends JPanel {
          * @return this ConstraintsBuilder for method chaining
          * @throws IllegalArgumentException if pad is negative
          */
-        public ConstraintsBuilder east(int pad) {
-            validatePad(pad, "EAST");
+        public ConstraintsBuilder right(int pad) {
+            validatePad(pad, "Right");
             layout.putConstraint(SpringLayout.EAST, component, -pad, SpringLayout.EAST, SpringPanel.this);
             return this;
         }
@@ -240,36 +206,54 @@ public class SpringPanel extends JPanel {
          * @return this ConstraintsBuilder for method chaining
          * @throws IllegalArgumentException if pad is negative or other is null
          */
-        public ConstraintsBuilder east(JComponent other, int pad) {
+        public ConstraintsBuilder leftOf(JComponent other, int pad) {
             requireNonNullComponent(other);
-            validatePad(pad, "EAST");
+            validatePad(pad, "Left of");
             layout.putConstraint(SpringLayout.EAST, component, -pad, SpringLayout.WEST, other);
             return this;
         }
-
+        
         /**
-         * Sets the baseline constraint relative to another component's baseline.
-         * 
-         * @param other the reference component
-         * @param pad the padding distance from the reference component's baseline (must be >= 0)
+         * Sets the component to fill the vertical space of the panel with optional padding.
+         *
+         * @param pad the padding from the panel's north and south edges (must be >= 0)
          * @return this ConstraintsBuilder for method chaining
-         * @throws IllegalArgumentException if pad is negative or other is null
+         * @throws IllegalArgumentException if pad is negative
          */
-        public ConstraintsBuilder baseline(JComponent other, int pad) {
-            requireNonNullComponent(other);
-            validatePad(pad, "BASELINE");
-            layout.putConstraint(SpringLayout.BASELINE, component, pad, SpringLayout.BASELINE, other);
+        public ConstraintsBuilder fillVertically(int pad) {
+            validatePad(pad, "Fill vertically");
+            layout.putConstraint(SpringLayout.NORTH, component, pad, SpringLayout.NORTH, SpringPanel.this);
+            layout.putConstraint(SpringLayout.SOUTH, component, -pad, SpringLayout.SOUTH, SpringPanel.this);
             return this;
         }
 
         /**
-         * Sets the baseline constraint relative to the panel's baseline.
-         * 
-         * @param pad the padding distance from the panel's baseline
+         * Sets the component to fill the horizontal space of the panel with optional padding.
+         *
+         * @param pad the padding from the panel's west and east edges (must be >= 0)
          * @return this ConstraintsBuilder for method chaining
+         * @throws IllegalArgumentException if pad is negative
          */
-        public ConstraintsBuilder baseline(int pad) {
-            layout.putConstraint(SpringLayout.BASELINE, component, pad, SpringLayout.BASELINE, SpringPanel.this);
+        public ConstraintsBuilder fillHorizontally(int pad) {
+            validatePad(pad, "Fill horizontally");
+            layout.putConstraint(SpringLayout.WEST, component, pad, SpringLayout.WEST, SpringPanel.this);
+            layout.putConstraint(SpringLayout.EAST, component, -pad, SpringLayout.EAST, SpringPanel.this);
+            return this;
+        }
+        
+        /**
+         * Sets the component to fill all available space in the panel with optional padding.
+         *
+         * @param pad the padding from all edges of the panel (must be >= 0)
+         * @return this ConstraintsBuilder for method chaining
+         * @throws IllegalArgumentException if pad is negative
+         */
+        public ConstraintsBuilder fill(int pad) {
+            validatePad(pad, "Fill all");
+            layout.putConstraint(SpringLayout.NORTH, component, pad, SpringLayout.NORTH, SpringPanel.this);
+            layout.putConstraint(SpringLayout.SOUTH, component, -pad, SpringLayout.SOUTH, SpringPanel.this);
+            layout.putConstraint(SpringLayout.WEST, component, pad, SpringLayout.WEST, SpringPanel.this);
+            layout.putConstraint(SpringLayout.EAST, component, -pad, SpringLayout.EAST, SpringPanel.this);
             return this;
         }
 
@@ -279,8 +263,22 @@ public class SpringPanel extends JPanel {
          * @param pad the offset distance from the panel's horizontal center
          * @return this ConstraintsBuilder for method chaining
          */
-        public ConstraintsBuilder horizontalCenter(int pad) {
+        public ConstraintsBuilder centerHorizontally(int pad) {
             layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, component, pad, SpringLayout.HORIZONTAL_CENTER, SpringPanel.this);
+            return this;
+        }
+
+        /**
+         * Sets the horizontal center constraint relative to another component's horizontal center.
+         *
+         * @param other the reference component
+         * @param pad the offset distance from the reference component's horizontal center
+         * @return this ConstraintsBuilder for method chaining
+         * @throws IllegalArgumentException if other is null
+         */
+        public ConstraintsBuilder centerHorizontally(JComponent other, int pad) {
+            requireNonNullComponent(other);
+            layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, component, pad, SpringLayout.HORIZONTAL_CENTER, other);
             return this;
         }
 
@@ -290,8 +288,47 @@ public class SpringPanel extends JPanel {
          * @param pad the offset distance from the panel's vertical center
          * @return this ConstraintsBuilder for method chaining
          */
-        public ConstraintsBuilder verticalCenter(int pad) {
+        public ConstraintsBuilder centerVertically(int pad) {
             layout.putConstraint(SpringLayout.VERTICAL_CENTER, component, pad, SpringLayout.VERTICAL_CENTER, SpringPanel.this);
+            return this;
+        }
+
+        /**
+         * Sets the vertical center constraint relative to another component's vertical center.
+         *
+         * @param other the reference component
+         * @param pad the offset distance from the reference component's vertical center
+         * @return this ConstraintsBuilder for method chaining
+         * @throws IllegalArgumentException if other is null
+         */
+        public ConstraintsBuilder centerVertically(JComponent other, int pad) {
+            requireNonNullComponent(other);
+            layout.putConstraint(SpringLayout.VERTICAL_CENTER, component, pad, SpringLayout.VERTICAL_CENTER, other);
+            return this;
+        }
+
+        /**
+         * Centers the component both horizontally and vertically relative to the panel.
+         *
+         * @param pad the offset distance from the panel's center
+         * @return this ConstraintsBuilder for method chaining
+         */
+        public ConstraintsBuilder center(int pad) {
+            layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, component, pad, SpringLayout.HORIZONTAL_CENTER, SpringPanel.this);
+            layout.putConstraint(SpringLayout.VERTICAL_CENTER, component, pad, SpringLayout.VERTICAL_CENTER, SpringPanel.this);
+            return this;
+        }
+
+        /**
+         * Sets the baseline constraint relative to another component's baseline.
+         *
+         * @param other the reference component
+         * @return this ConstraintsBuilder for method chaining
+         * @throws IllegalArgumentException if other is null
+         */
+        public ConstraintsBuilder baseline(JComponent other) {
+            requireNonNullComponent(other);
+            layout.putConstraint(SpringLayout.BASELINE, component, 0, SpringLayout.BASELINE, other);
             return this;
         }
 
@@ -311,14 +348,13 @@ public class SpringPanel extends JPanel {
         }
 
         /**
-         * Sets the width constraint with a scaling factor.
-         * 
-         * @param value the base width value
-         * @param factor the scaling factor to apply to the base value
+         * Sets the width constraint as a scaled factor of the panel's width.
+         *
+         * @param factor the scaling factor to apply to the panel's width
          * @return this ConstraintsBuilder for method chaining
          */
-        public ConstraintsBuilder width(int value, float factor) {
-            constraints.setWidth(Spring.scale(Spring.constant(value), factor));
+        public ConstraintsBuilder width(float factor) {
+            constraints.setWidth(Spring.scale(getWidthSpring(), factor));
             return this;
         }
 
@@ -334,14 +370,13 @@ public class SpringPanel extends JPanel {
         }
 
         /**
-         * Sets the height constraint with a scaling factor.
-         * 
-         * @param value the base height value
-         * @param factor the scaling factor to apply to the base value
+         * Sets the height constraint as a scaled factor of the panel's height.
+         *
+         * @param factor the scaling factor to apply to the panel's height
          * @return this ConstraintsBuilder for method chaining
          */
-        public ConstraintsBuilder height(int value, float factor) {
-            constraints.setHeight(Spring.scale(Spring.constant(value), factor));
+        public ConstraintsBuilder height(float factor) {
+            constraints.setHeight(Spring.scale(getHeightSpring(), factor));
             return this;
         }
 
@@ -361,14 +396,13 @@ public class SpringPanel extends JPanel {
         }
 
         /**
-         * Sets the absolute x-coordinate constraint with a scaling factor.
-         * 
-         * @param value the base x-coordinate value
-         * @param factor the scaling factor to apply to the base value
+         * Sets the absolute x-coordinate constraint as a scaled factor of the panel's width.
+         *
+         * @param factor the scaling factor to apply to the panel's width
          * @return this ConstraintsBuilder for method chaining
          */
-        public ConstraintsBuilder x(int value, float factor) {
-            constraints.setX(Spring.scale(Spring.constant(value), factor));
+        public ConstraintsBuilder x(float factor) {
+            constraints.setX(Spring.scale(getWidthSpring(), factor));
             return this;
         }
 
@@ -384,15 +418,61 @@ public class SpringPanel extends JPanel {
         }
 
         /**
-         * Sets the absolute y-coordinate constraint with a scaling factor.
-         * 
-         * @param value the base y-coordinate value
-         * @param factor the scaling factor to apply to the base value
+         * Sets the absolute y-coordinate constraint as a scaled factor of the panel's height.
+         *
+         * @param factor the scaling factor to apply to the panel's height
          * @return this ConstraintsBuilder for method chaining
          */
-        public ConstraintsBuilder y(int value, float factor) {
-            constraints.setY(Spring.scale(Spring.constant(value), factor));
+        public ConstraintsBuilder y(float factor) {
+            constraints.setY(Spring.scale(getHeightSpring(), factor));
             return this;
+        }
+
+        // =========================
+        // VALIDATE METHODS
+        // =========================
+
+        /**
+         * Validates that the padding value is non-negative.
+         *
+         * @param pad the padding value to validate
+         * @param edge the edge name for error messages
+         * @throws IllegalArgumentException if pad is negative
+         */
+        private void validatePad(int pad, String edge) {
+            if (pad < 0) {
+                throw new IllegalArgumentException(edge + " must be >= 0");
+            }
+        }
+
+        /**
+         * Validates that the reference component is not null.
+         *
+         * @param other the reference component to validate
+         * @throws IllegalArgumentException if the component is null
+         */
+        private void requireNonNullComponent(JComponent other) {
+            if (other == null) {
+                throw new IllegalArgumentException("Reference component cannot be null");
+            }
+        }
+
+        /**
+         * Returns a Spring representing the panel's width.
+         *
+         * @return a Spring for the panel's width
+         */
+        private Spring getWidthSpring() {
+            return layout.getConstraint(SpringLayout.WIDTH, SpringPanel.this);
+        }
+
+        /**
+         * Returns a Spring representing the panel's height.
+         *
+         * @return a Spring for the panel's height
+         */
+        private Spring getHeightSpring() {
+            return layout.getConstraint(SpringLayout.HEIGHT, SpringPanel.this);
         }
     }
 }

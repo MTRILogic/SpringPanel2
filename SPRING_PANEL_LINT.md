@@ -17,9 +17,9 @@ NO olvidar `.apply()` en SpringPanel (V1 o Legacy):
 
 ---
 
-NO usar `north()` para alinear texto:
+NO usar `top()` para alinear texto:
 
-    panel.with(field).north(10);
+    panel.with(field).top(10);
 
 ---
 
@@ -32,8 +32,8 @@ NO mezclar layouts:
 
 NO posicionar componentes relacionados de forma independiente:
 
-    label → north(10)
-    field → north(10)
+    label → top(10)
+    field → top(10)
 
 ---
 
@@ -47,21 +47,21 @@ Usar SpringPanel (V2):
 
 Usar baseline para texto:
 
-    .baseline(label, 0)
+    .baseline(label)
 
 ---
 
 Usar posicionamiento relativo:
 
-    .west(label, 10)
+    .rightOf(label, 10)
 
 ---
 
 Mantener código legible:
 
     panel.with(field)
-        .baseline(label, 0)
-        .west(label, 10);
+        .baseline(label)
+        .rightOf(label, 10);
 
 ---
 
@@ -74,19 +74,19 @@ Mantener código legible:
 
 ## Anti-pattern
     panel.with(label)
-        .north(10)
-        .west(10);
+        .top(10)
+        .left(10);
 
     panel.with(field)
-        .north(10)
-        .west(120);
+        .top(10)
+        .left(120);
 
 ---
 
 ## Correcto
     panel.with(field)
-        .baseline(label, 0)
-        .west(label, 10);
+        .baseline(label)
+        .rightOf(label, 10);
 
 ---
 

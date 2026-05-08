@@ -28,15 +28,16 @@ Nunca usar:
 ## Alineación
 Para componentes con texto usar siempre baseline:
 
-    .baseline(label, 0)
+    .baseline(label)
 
 ---
 
 ## Posicionamiento
 Usar posicionamiento relativo:
 
-    .west(label, 10)
-    .north(10)
+    .rightOf(label, 10)
+    .below(label, 10)
+    .top(10)
 
 Evitar posicionamiento absoluto salvo que sea estrictamente necesario.
 
@@ -46,12 +47,12 @@ Evitar posicionamiento absoluto salvo que sea estrictamente necesario.
 Estructura obligatoria para label + campo:
 
     panel.with(label)
-        .north(pad)
-        .west(pad);
+        .top(pad)
+        .left(pad);
 
     panel.with(field)
-        .baseline(label, 0)
-        .west(label, pad);
+        .baseline(label)
+        .rightOf(label, pad);
 
 ---
 
