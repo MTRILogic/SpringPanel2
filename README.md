@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.MTRILogic:SpringPanel2:Tag")
+    implementation("com.github.MTRILogic:SpringPanel2:1.1.0")
 }
 ```
 
@@ -35,7 +35,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.MTRILogic:SpringPanel2:Tag'
+    implementation 'com.github.MTRILogic:SpringPanel2:1.1.0'
 }
 ```
 
@@ -50,7 +50,7 @@ Or Maven:
 <dependency>
     <groupId>com.github.MTRILogic</groupId>
     <artifactId>SpringPanel2</artifactId>
-    <version>Tag</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
